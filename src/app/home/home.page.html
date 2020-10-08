@@ -1,0 +1,62 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Open Trivia
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div id="container" *ngIf="!result">
+    <ion-list>
+
+      <ion-item>
+        <ion-label position="floating">Votre Pseudo :</ion-label>
+        <ion-input type="text" [(ngModel)]="pseudo"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Difficulté :</ion-label>
+        <ion-select [(ngModel)]="difficulte">
+          <ion-select-option value="">Votre choix</ion-select-option>
+          <ion-select-option value="easy">Easy</ion-select-option>
+          <ion-select-option value="medium">Medium</ion-select-option>
+          <ion-select-option value="hard">Hard</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-toggle [(ngModel)]="saveinfos"></ion-toggle>
+        <ion-label>Sauvegarder mes informations :</ion-label>
+      </ion-item>
+    </ion-list>
+
+    <ion-button expand="full" (click)="verification()">Commencer</ion-button>
+
+  </div>
+
+
+  <ion-list id="container" *ngIf="result">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Bienvenue {{pseudo}}</ion-card-title>
+
+        <ion-card-subtitle>{{question.question}}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+
+        <div *ngFor="let rep of listeReponses">
+          <ion-button shape="round" color={{btnColor}} (click)="ClicReponse(rep)">{{rep}}</ion-button>
+        </div>
+
+      </ion-card-content>
+      <ion-card-content>
+        <ion-button shape="block" color="tertiary" *ngIf="next" (click)="ClicNext()">Question suivante</ion-button>
+      </ion-card-content>
+
+      <ion-card-content>
+        <ion-button shape="block" color="warning" *ngIf="fin" (click)="ClicAccueil()">Revenir a l'accueil</ion-button>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+</ion-content>

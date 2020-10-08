@@ -13,8 +13,8 @@ export class HomePage {
   constructor(public toastCtrl: ToastController, public openTriviaService: OpenTriviaService) { }
 
   public result: boolean = false;
-  public pseudo: string = "";
-  public difficulte: string = "";
+  public pseudo: string = "Rudy";
+  public difficulte: string = "easy";
   public error: string = "";
   public reponse: boolean = false;
   public saveinfos = false;
@@ -24,7 +24,7 @@ export class HomePage {
   public listeReponses: string[] = [];
   public fin: boolean = false;
   public next: boolean = false;
-  public btnColor : string = "medium";
+  public btnColor: string = "medium";
 
 
   async showToast(erreur: string) {
@@ -49,20 +49,23 @@ export class HomePage {
       return;
     }
 
-    this.result = true;
-    await this.getListeQuestions();
-    this.afficherQuestion()
+    
+   await this.getListeQuestions();
+   this.listeQuestions = this.shuffle(this.listeQuestions);
+   this.afficherQuestion();
+   this.result = true;
+    
   }
 
   public async getListeQuestions() {
-    this.openTriviaService.getQuestions(1, this.difficulte)
-      .then((resultat) => {
-        
-        this.listeQuestions = this.shuffle(resultat);
-      })
-      .catch(async (err) => {
-        this.showToast("Impossible de recuperer la liste des questions");
-      })
+    try {
+      this.listeQuestions = await this.openTriviaService.getQuestions(1, this.difficulte);
+      console.log( this.listeQuestions)
+     
+    } catch {
+        console.log("erreur")
+      
+    }
   }
 
   public afficherQuestion() {
@@ -78,18 +81,18 @@ export class HomePage {
   ClicReponse(value: string) {
 
     // changement de couleur en fonction de la bonne reponse
-    if(value === this.question.correct_answer) {
+    if (value === this.question.correct_answer) {
       this.btnColor = "success"
     } else {
       this.btnColor = "danger"
     }
 
-
-     if (this.numQuestion >= this.listeQuestions.length-1) {
+    if (this.numQuestion >= this.listeQuestions.length - 1) {
       this.fin = true;
     } else {
       this.next = true;
     }
+
   }
 
   ClicNext() {
@@ -107,7 +110,7 @@ export class HomePage {
     this.numQuestion = 0;
     this.listeReponses = [];
     this.next = false;
-    this.listeQuestions =[];
+    this.listeQuestions = [];
     this.fin = false;
   }
 
